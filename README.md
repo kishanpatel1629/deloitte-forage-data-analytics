@@ -71,4 +71,6 @@ HR needed a way to interpret raw equality review scores and identify outliers or
 - 🔗 [LinkedIn](https://www.linkedin.com/in/kishan-patel-kp1629/)
 
 
+
+
 > Thanks for visiting my portfolio! I'm actively seeking opportunities in data analytics, business analysis, or data science. Feel free to explore, star, and connect.
