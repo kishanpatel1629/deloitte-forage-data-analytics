@@ -30,13 +30,19 @@ Daikibo's leadership team wanted to understand:
 **Rows:** 2,300+ telemetry records  
 **Main Columns:**
 
-| Column       | Description                                                | Sample / Values |
-|--------------|------------------------------------------------------------|------------------|
-| `factory`    | Factory name                                               | `Osaka`, `Kyoto`, `Nagoya`, `Tokyo` |
-| `device_id`  | Unique machine identifier                                  | e.g., `LW-003`, `AP-104` |
-| `device_type`| Machine category                                           | `LaserWelder`, `AutoPress`, `Cutter`, `DrillPress`, `PaintStation`, `HeatPress` |
-| `timestamp`  | Datetime of telemetry record                               | `2023-10-01 09:25:00` |
-| `status`     | Machine health status                                      | `healthy`, `unhealthy` |
+| Column Name         | Description                                                                 | Sample / Values                          |
+|---------------------|-----------------------------------------------------------------------------|-------------------------------------------|
+| `deviceID`          | Unique identifier for each machine device                                   | `19ff3161-2b3a-40a3-8604-bdc6532d0dab`    |
+| `deviceType`        | Category of the machine                                                     | 'AirWrench', 'CNC', 'ConveyorBelt', 'Furnace', 'HeavyDutyDrill', 'LaserCutter', 'LaserWelder', 'MetalPress', 'SpotWelder' |
+| `timestamp`         | UNIX timestamp of the machine's health status record                        | `1619816400000` (in milliseconds)         |
+| `location_country`  | Country of the factory                                                      | 'china', 'germany', 'japan'                                   |
+| `location_city`     | City of the factory                                                         | 'berlin', 'osaka', 'shenzhen', 'tokyo'                    |
+| `location_area`     | Industrial area where factory is located                                    | `keiyō-industrial-zone`                   |
+| `location_factory`  | Full name of the factory                                                    | 'daikibo-berlin', 'daikibo-factory-meiyo', 'daikibo-factory-seiko', 'daikibo-shenzhen'                   |
+| `location_section`  | Section of the factory where the machine is installed                       | `section-1`, `section-2`, etc.            |
+| `data_status`       | Operational health of the machine                                           | `healthy`, `unhealthy`                    |
+| `data_temperature`  | Temperature (°C) of the machine at time of recording                        | `27`, `35`, etc.                          |
+
 
 > Each “unhealthy” record = 10 minutes of downtime.
 
