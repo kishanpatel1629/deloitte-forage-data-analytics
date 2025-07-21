@@ -1,4 +1,5 @@
-# 💼 Deloitte Data Analytics Virtual Experience (Forage)
+# 💼 Deloitte Data Analytics Virtual Experience Project (Forage)
+## **Daikibo Factory Downtime & HR Equality Review Analysis**
 
 Welcome to my completed project for the **Deloitte Data Analytics Virtual Experience** hosted on [Forage](https://www.theforage.com/). This simulation replicates real client-facing work at Deloitte, where I used **Tableau**, **Excel**, and **Python** to solve business problems and deliver actionable insights.
 
@@ -7,18 +8,37 @@ Welcome to my completed project for the **Deloitte Data Analytics Virtual Experi
 ## 📌 Project Summary
 
 **Client:** Daikibo Corporation – a global manufacturing company  
-**Objective:** Analyze machine performance and HR equality scores to identify operational inefficiencies and fairness concerns  
 **Tools Used:** Tableau Public, Excel, Python (Colab)  
 **Skills Demonstrated:** Data wrangling, dashboard design, logic classification, stakeholder-focused storytelling
+
+| Task | Objective |
+|------|-----------|
+| 🏭 Machine Downtime Analysis | Identify factories and device types with the highest machine downtime |
+| 👥 HR Equality Review Analysis | Classify performance review fairness based on quantitative equality scores |
 
 ---
 
 ## 📊 Task 1: Machine Downtime Analysis (Tableau)
 
-### 🧠 Problem
+### 🧠 Problem Statement 
 Daikibo's leadership team wanted to understand:
 1. **Which factory had the most machine downtime?**  
 2. **Which devices contributed most to breakdowns at that factory?**
+
+### 📁 Dataset Overview  
+**File Name:** `daikibo-telemetry-data.json` (converted to CSV via Python)  
+**Rows:** 2,300+ telemetry records  
+**Main Columns:**
+
+| Column       | Description                                                | Sample / Values |
+|--------------|------------------------------------------------------------|------------------|
+| `factory`    | Factory name                                               | `Osaka`, `Kyoto`, `Nagoya`, `Tokyo` |
+| `device_id`  | Unique machine identifier                                  | e.g., `LW-003`, `AP-104` |
+| `device_type`| Machine category                                           | `LaserWelder`, `AutoPress`, `Cutter`, `DrillPress`, `PaintStation`, `HeatPress` |
+| `timestamp`  | Datetime of telemetry record                               | `2023-10-01 09:25:00` |
+| `status`     | Machine health status                                      | `healthy`, `unhealthy` |
+
+> Each “unhealthy” record = 10 minutes of downtime.
 
 ### 🛠️ What I Did
 - Flattened a complex telemetry JSON into a structured CSV using Python
@@ -38,9 +58,9 @@ Daikibo's leadership team wanted to understand:
     
 - Enabled clear business exploration of machine issues by site
 
-### 📈 Result
-✅ **Osaka** was the worst-performing location  
-✅ **LaserWelder** caused the most downtime there  
+### 📊 Key Insights  
+✅ **Osaka** factory had the **most total downtime**.  
+✅ **LaserWelder** machines in Osaka were the top contributors to downtime.  
 ✅ Delivered a interactive dashboard
 
 <p align="center">
@@ -49,12 +69,30 @@ Daikibo's leadership team wanted to understand:
 
 👉 [Click here to view the interactive dashboard](https://public.tableau.com/views/Daikibo-Telemetry/Machine_Downtime_Analysis-DB?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link)
 
+### 💥 Business Impact  
+- Leadership can now **prioritize maintenance** and improve uptime.  
+- Dashboards simplify identifying bottlenecks across sites.
+
 ---
 
 ## 🧮 Task 2: Equality Score Classification (Excel)
 
-### 🧠 Problem
-HR needed a way to interpret raw equality review scores and identify outliers or biased patterns in evaluations.
+### 🧠 Problem Statement  
+Daikibo’s HR team struggled to interpret raw equality scores in performance reviews and wanted a **clear system** to identify fairness or potential bias in evaluations.
+
+### 📁 Dataset Overview  
+**File Name:** `Equality Table.xlsx`  
+**Rows:** 100 employee review records  
+**Columns:**
+
+| Column           | Description                                      | Sample / Values |
+|------------------|--------------------------------------------------|------------------|
+| `Employee ID`    | Unique employee identifier                       | e.g., `EMP001` |
+| `Manager ID`     | Manager who conducted the review                 | e.g., `MGR09` |
+| `Department`     | Department of the employee                       | `Operations`, `HR`, `Finance`, etc. |
+| `Review Date`    | Date of performance evaluation                   | `2023-09-15` |
+| `Equality Score` | Score showing fairness (0 = fair, ± = bias)     | e.g., `-25`, `+12`, `0` |
+| `Classification` | **Added column**: Label for fairness level      | `Fair`, `Unfair`, `Highly Discriminative` |
 
 ### 🛠️ What I Did
 - Created a new column to classify scores as:
@@ -65,8 +103,33 @@ HR needed a way to interpret raw equality review scores and identify outliers or
   ```excel
   =IF(ABS(A2)<=10, "Fair", IF(ABS(A2)<=20, "Unfair", "Highly Discriminative"))
 
+### 📊 Key Insights  
+- Around **65%** of reviews were labeled **Fair**, but others showed signs of **potential bias**.  
+- HR can now **easily filter and investigate** reviews marked "Highly Discriminative".
 
-## 💼 Let’s Connect
+### 💥 Business Impact  
+- Improved **transparency and fairness** in evaluations.  
+- HR can take **proactive action** based on unbiased metrics.
+
+---
+
+## 📈 Results Summary
+
+| Area        | Outcome                                                                 |
+|-------------|-------------------------------------------------------------------------|
+| Operations | Identified most affected factory (Osaka) and device (LaserWelder)       |
+| HR         | Classified reviews into Fair, Unfair, or Discriminative for action      |
+| Executive Use | Dashboards and logic sheets support informed, timely decision-making  |
+
+---
+
+## 🚀 Conclusion
+
+This project demonstrates my ability to solve business problems with data using real-world tools and logic. From operational root cause analysis to fairness in HR practices, I delivered structured, clear, and actionable insights — just like I would in a client-facing role at Deloitte or any data-driven organization.
+
+---
+
+## 💼 Get In Touch
 
 - 🔗 [LinkedIn](https://www.linkedin.com/in/kishan-patel-kp1629/)
 
