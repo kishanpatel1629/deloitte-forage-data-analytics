@@ -1,145 +1,141 @@
-# 💼 Deloitte Data Analytics Virtual Experience Project (Forage)
-## **Daikibo Factory Downtime & HR Equality Review Analysis**
+# Deloitte Australia Data Analytics Job Simulation (Forage)
 
-Welcome to my completed project for the **Deloitte Data Analytics Virtual Experience** hosted on [Forage](https://www.theforage.com/). This simulation replicates real client-facing work at Deloitte, where I used **Tableau**, **Excel**, and **Python** to solve business problems and deliver actionable insights.
+**Daikibo Industrials: machine downtime dashboard and HR equality score classification**
 
----
+**Tools:** Python (pandas), Tableau Public, Excel
 
-## 📌 Project Summary
+**[View the interactive Tableau dashboard](https://public.tableau.com/views/Daikibo-Telemetry/Machine_Downtime_Analysis-DB)**
 
-**Client:** Daikibo Corporation – a global manufacturing company  
-**Tools Used:** Tableau Public, Excel, Python (Colab)  
-**Skills Demonstrated:** Data wrangling, dashboard design, logic classification, stakeholder-focused storytelling
+This repository contains my work for the [Deloitte Australia Data Analytics Job Simulation](https://www.theforage.com/simulations/deloitte-au/data-analytics-s5zy) on Forage. The simulation gives a fictional client, Daikibo Industrials, a manufacturing company with four factories, and asks for two pieces of work: a dashboard that shows where machines break down most, and a simple system for classifying HR equality scores.
 
-| Task | Objective |
-|------|-----------|
-| 🏭 Machine Downtime Analysis | Identify factories and device types with the highest machine downtime |
-| 👥 HR Equality Review Analysis | Classify performance review fairness based on quantitative equality scores |
+## Key results
 
----
+| Question | Answer |
+|---|---|
+| Which factory had the most machine downtime? | **Osaka (Daikibo Factory Seiko)** with 480 minutes, 46.6% of all downtime |
+| Which machines caused it? | **Laser welders.** They caused all 480 minutes of downtime in Osaka |
+| Which factory was next? | Shenzhen with 420 minutes (40.8%), 390 of them from laser cutters |
+| How many equality scores were outside the fair range? | **18 of 37** (11 Unfair and 7 Highly Discriminative) |
 
-## 📊 Task 1: Machine Downtime Analysis (Tableau)
+## Task 1: Machine downtime dashboard (Python and Tableau)
 
-### 🧠 Problem Statement 
-Daikibo's leadership team wanted to understand:
-1. **Which factory had the most machine downtime?**  
-2. **Which devices contributed most to breakdowns at that factory?**
+### Business question
 
-### 📁 Dataset Overview  
-**File Name:** `daikibo-telemetry-data.json` (converted to CSV via Python)  
-**Rows:** 2,300+ telemetry records  
-**Main Columns:**
+Daikibo's leadership wanted to know which factory had the most machine downtime, and which types of machines were behind it.
 
-| Column Name         | Description                                                                 | Sample / Values                          |
-|---------------------|-----------------------------------------------------------------------------|-------------------------------------------|
-| `deviceID`          | Unique identifier for each machine device                                   | `19ff3161-2b3a-40a3-8604-bdc6532d0dab`    |
-| `deviceType`        | Category of the machine                                                     | 'AirWrench', 'CNC', 'ConveyorBelt', 'Furnace', 'HeavyDutyDrill', 'LaserCutter', 'LaserWelder', 'MetalPress', 'SpotWelder' |
-| `timestamp`         | UNIX timestamp of the machine's health status record                        | `1619816400000` (in milliseconds)         |
-| `location_country`  | Country of the factory                                                      | 'china', 'germany', 'japan'                                   |
-| `location_city`     | City of the factory                                                         | 'berlin', 'osaka', 'shenzhen', 'tokyo'                    |
-| `location_area`     | Industrial area where factory is located                                    | `keiyō-industrial-zone`                   |
-| `location_factory`  | Full name of the factory                                                    | 'daikibo-berlin', 'daikibo-factory-meiyo', 'daikibo-factory-seiko', 'daikibo-shenzhen'                   |
-| `location_section`  | Section of the factory where the machine is installed                       | `section-1`, `section-2`, etc.            |
-| `data_status`       | Operational health of the machine                                           | `healthy`, `unhealthy`                    |
-| `data_temperature`  | Temperature (°C) of the machine at time of recording                        | `27`, `35`, etc.                          |
+### Data
 
+The data is a set of machine health readings, provided by Forage as a single JSON file (`daikibo-telemetry-data.json.zip`).
 
-> Each “unhealthy” record = 10 minutes of downtime.
+* 160,704 readings from 36 machines, 9 in each of 4 factories (Berlin, Osaka, Shenzhen and Tokyo)
+* Each reading has the machine ID and type, the factory location, a status of `healthy` or `unhealthy`, and a temperature
+* Location and status are nested inside each record, so the file has to be flattened before Tableau can use it
 
-### 🛠️ What I Did
-- Flattened a complex telemetry JSON into a structured CSV using Python
-- Calculated downtime: each `"unhealthy"` status = 10 minutes
-- Built an interactive Tableau dashboard with:
-  - Downtime per Factory chart
-    
-    <p align="center">
-      <img src="./images/downtime_per_factoryLocation.png" alt="Downtime per Factory chart" width="800"/>
-    </p>
-    
-  - Device Type chart (updates dynamically by selected factory)
- 
-   <p align="center">
-      <img src="./images/downtype_by_deviceType.png" alt="Device Type chart" width="800"/>
-   </p> 
-    
-- Enabled clear business exploration of machine issues by site
+| Column | Meaning | Example |
+|---|---|---|
+| `deviceID` | Unique ID of the machine | `19ff3161-2b3a-40a3-8604-bdc6532d0dab` |
+| `deviceType` | Type of machine | `LaserWelder`, `CNC`, `Furnace` |
+| `timestamp` | Time of the reading, in milliseconds since 1970 (UTC) | `1619816400000` |
+| `location_city` | Factory city | `osaka`, `tokyo`, `shenzhen`, `berlin` |
+| `location_factory` | Factory name | `daikibo-factory-seiko` |
+| `location_section` | Section of the factory | `section-1` |
+| `data_status` | Machine health at the time of the reading | `healthy`, `unhealthy` |
+| `data_temperature` | Machine temperature | `27` |
 
-### 📊 Key Insights  
-✅ **Osaka** factory had the **most total downtime**.  
-✅ **LaserWelder** machines in Osaka were the top contributors to downtime.  
-✅ Delivered a interactive dashboard
+### What I did
 
-<p align="center">
-  <img src="./images/Machine_Downtime_Analysis-DB.png" alt="Tableau Dashboard" width="800"/>
-</p>
+1. **Flattened the JSON with Python.** [`flatten_telemetry.py`](flatten_telemetry.py) uses `pandas.json_normalize` to turn nested fields such as `location.city` into flat columns such as `location_city`, then saves a CSV file for Tableau.
+2. **Calculated downtime.** Following the Forage instructions, machines report every 10 minutes, so each `unhealthy` reading counts as 10 minutes of downtime.
+3. **Built a Tableau dashboard** with two bar charts: downtime per factory, and downtime per machine type. Clicking a factory in the first chart filters the second chart to that factory.
 
-👉 [Click here to view the interactive dashboard](https://public.tableau.com/views/Daikibo-Telemetry/Machine_Downtime_Analysis-DB?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link)
+![Machine downtime dashboard](images/Machine_Downtime_Analysis-DB_solved.png)
 
-### 💥 Business Impact  
-- Leadership can now **prioritize maintenance** and improve uptime.  
-- Dashboards simplify identifying bottlenecks across sites.
+When Osaka is selected, the machine type chart shows that laser welders caused all of its downtime:
 
----
+![Dashboard filtered to the Osaka factory](images/Machine_Downtime_Analysis-DB.png)
 
-## 🧮 Task 2: Equality Score Classification (Excel)
+### Results
 
-### 🧠 Problem Statement  
-Daikibo’s HR team struggled to interpret raw equality scores in performance reviews and wanted a **clear system** to identify fairness or potential bias in evaluations.
+| Factory | Downtime | Share of total | Main cause |
+|---|---|---|---|
+| Osaka (Daikibo Factory Seiko) | 480 minutes | 46.6% | Laser welders (480 minutes) |
+| Shenzhen | 420 minutes | 40.8% | Laser cutters (390 minutes) |
+| Tokyo (Daikibo Factory Meiyo) | 110 minutes | 10.7% | Heavy duty drills (70 minutes) |
+| Berlin | 20 minutes | 1.9% | Furnaces (20 minutes) |
 
-### 📁 Dataset Overview  
-**File Name:** `Equality Table.xlsx`  
-**Rows:** 100 employee review records  
-**Columns:**
+Osaka and Shenzhen together caused 87% of all downtime, and in both factories almost all of it came from one type of laser machine. This points maintenance teams to a short list of machines to inspect first.
 
-| Column           | Description                                      | Sample / Values |
-|------------------|--------------------------------------------------|------------------|
-| `Employee ID`    | Unique employee identifier                       | e.g., `EMP001` |
-| `Manager ID`     | Manager who conducted the review                 | e.g., `MGR09` |
-| `Department`     | Department of the employee                       | `Operations`, `HR`, `Finance`, etc. |
-| `Review Date`    | Date of performance evaluation                   | `2023-09-15` |
-| `Equality Score` | Score showing fairness (0 = fair, ± = bias)     | e.g., `-25`, `+12`, `0` |
-| `Classification` | **Added column**: Label for fairness level      | `Fair`, `Unfair`, `Highly Discriminative` |
+### Data quality check
 
-### 🛠️ What I Did
-- Created a new column to classify scores as:
-  - `Fair` (±10)
-  - `Unfair` (< -10 or >10)
-  - `Highly Discriminative` (< -20 or >20)
-- Used a clear, scalable formula:
-  ```excel
-  =IF(ABS(A2)<=10, "Fair", IF(ABS(A2)<=20, "Unfair", "Highly Discriminative"))
+While checking the data, I found that many readings repeat: each machine has 31 readings for every timestamp, and 134,703 rows are exact copies of another row. I followed the Forage method and counted every unhealthy row. As a check, I also counted each machine and timestamp only once. Osaka stays in first place (480 minutes) and Shenzhen second (370 minutes), so the conclusion does not change.
 
-### 📊 Key Insights  
-- Around **65%** of reviews were labeled **Fair**, but others showed signs of **potential bias**.  
-- HR can now **easily filter and investigate** reviews marked "Highly Discriminative".
+## Task 2: HR equality score classification (Excel)
 
-### 💥 Business Impact  
-- Improved **transparency and fairness** in evaluations.  
-- HR can take **proactive action** based on unbiased metrics.
+### Business question
 
----
+Daikibo's HR team had an equality score for each job role at each factory, but no simple way to tell which scores showed a problem.
 
-## 📈 Results Summary
+### Data
 
-| Area        | Outcome                                                                 |
-|-------------|-------------------------------------------------------------------------|
-| Operations | Identified most affected factory (Osaka) and device (LaserWelder)       |
-| HR         | Classified reviews into Fair, Unfair, or Discriminative for action      |
-| Executive Use | Dashboards and logic sheets support informed, timely decision-making  |
+`Equality Table.xlsx` has 37 rows, one for each job role at each factory, with three columns: `Factory`, `Job Role` and `Equality Score`.
 
----
+### What I did
 
-## 🚀 Conclusion
+I added an `Equality class` column (in `Equality Table-solved.xlsx`) using this formula:
 
-This project demonstrates my ability to solve business problems with data using real-world tools and logic. From operational root cause analysis to fairness in HR practices, I delivered structured, clear, and actionable insights — just like I would in a client-facing role at Deloitte or any data-driven organization.
+```excel
+=IF(ABS(C2)<=10,"Fair",IF(ABS(C2)<=20,"Unfair","Highly Discriminative"))
+```
 
----
+`ABS` removes the minus sign, so a score of -15 and a score of 15 are treated the same way:
 
-## 💼 Get In Touch
+| Equality score | Class |
+|---|---|
+| -10 to 10 | Fair |
+| -20 to -11, or 11 to 20 | Unfair |
+| Below -20, or above 20 | Highly Discriminative |
 
-- 🔗 [LinkedIn](https://www.linkedin.com/in/kishan-patel-kp1629/)
+### Results
 
+| Class | Count | Share |
+|---|---|---|
+| Fair | 19 | 51% |
+| Unfair | 11 | 30% |
+| Highly Discriminative | 7 | 19% |
 
+* **Management roles stand out.** 16 of the 17 management scores (C-Level, VP, Director, Sr. Manager, Manager and Jr. Manager) are outside the fair range.
+* **Engineering and operator roles are all Fair.** All 16 scores for Engineers, Jr. Engineers, Sr. Engineers and Machine Operators are within the fair range.
+* **Tokyo (Daikibo Factory Meiyo) has the most scores outside the fair range**, 7 of its 11 roles.
+* All 18 scores outside the fair range are negative.
 
+This tells HR to start its review with management roles, and with the Tokyo factory.
 
-> Thanks for visiting my portfolio! I'm actively seeking opportunities in data analytics, business analysis, or data science. Feel free to explore, star, and connect.
+## Files in this repository
+
+| File | What it is |
+|---|---|
+| `daikibo-telemetry-data.json.zip` | Raw machine data from Forage |
+| `flatten_telemetry.py` | Python script that flattens the JSON into a CSV and prints a downtime summary |
+| `Equality Table.xlsx` | Original HR equality scores from Forage |
+| `Equality Table-solved.xlsx` | The same table with my `Equality class` column |
+| `images/` | Screenshots of the Tableau dashboard |
+
+### How to reproduce Task 1
+
+```bash
+pip install pandas
+python flatten_telemetry.py
+```
+
+This creates `daikibo-telemetry-data.csv` (the file used in Tableau) and prints downtime by factory and by machine type.
+
+## What I learned
+
+* Flattening nested JSON data with pandas so it can be used in a BI tool
+* Building an interactive Tableau dashboard where one chart filters another
+* Checking data quality and testing whether a problem in the data changes the result
+* Turning a business rule into a clear Excel formula
+
+## Contact
+
+**Kishan Patel** | [LinkedIn](https://www.linkedin.com/in/kishan-patel-kp1629) | [GitHub](https://github.com/kishanpatel1629) | [Tableau Public](https://public.tableau.com/app/profile/kishan.patel5786)
